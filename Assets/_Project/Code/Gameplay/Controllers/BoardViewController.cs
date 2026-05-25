@@ -54,7 +54,7 @@ namespace Minesweeper.Gameplay
                     var position = new Vector3(x - halfCols, y - halfRows, 0f);
                     var view = UnityEngine.Object.Instantiate(_cellPrefab, position, Quaternion.identity, _root);
                     view.name = $"Cell_{x}_{y}";
-                    view.SetState(CellVisualState.Closed);
+                    view.SetState(CellVisualState.Closed, 0);
                     _viewByCell[cell] = view;
                     _spawnedViews.Add(view);
                 }
@@ -64,7 +64,14 @@ namespace Minesweeper.Gameplay
         private void OnCellChanged(Cell cell)
         {
             if (!_viewByCell.TryGetValue(cell, out var view)) return;
-            view.SetState(cell.IsOpen ? CellVisualState.Opened : CellVisualState.Closed);
+            view.SetState(GetVisualState(cell), cell.NeighbourMines);
+        }
+
+        private static CellVisualState GetVisualState(Cell cell)
+        {
+            if (cell.IsOpen)
+                return cell.HasMine ? CellVisualState.Mine : CellVisualState.Opened;
+            return CellVisualState.Closed;
         }
     }
 }

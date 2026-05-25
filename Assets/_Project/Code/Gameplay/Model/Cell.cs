@@ -7,6 +7,7 @@
 
         public bool HasMine;
         public bool IsOpen;
+        public int NeighbourMines;
 
         public Cell(int x, int y)
         {

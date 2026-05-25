@@ -51,6 +51,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Minesweeper::Minesweeper.Gameplay.CellView
   _closedSprite: {fileID: 3160709450611944481}
   _openedSprite: {fileID: 1014873419226041497}
+  _mineSprite: {fileID: 7423943901859338286}
+  _numberLabel: {fileID: 6852171658520654623}
 --- !u!1 &2463824471708075924
 GameObject:
   m_ObjectHideFlags: 0
@@ -158,7 +160,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1120330977470864135
 Transform:
   m_ObjectHideFlags: 0
@@ -341,7 +343,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1983807076532378864
 RectTransform:
   m_ObjectHideFlags: 0

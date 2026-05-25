@@ -3,6 +3,7 @@
     public enum CellVisualState
     {
         Closed,
-        Opened
+        Opened,
+        Mine
     }
 }
