@@ -10,14 +10,18 @@ namespace Minesweeper.Bootstrap
 {
     public class GameLifetimeScope : LifetimeScope
     {
-        [Header("Configs")] [SerializeField] private GameConfigSO _gameConfig;
+        [Header("Configs")] 
+        [SerializeField] private GameConfigSO _gameConfig;
         [SerializeField] private CameraConfigSO _cameraConfig;
 
-        [Header("Scene References")] [SerializeField] private Camera _mainCamera;
+        [Header("Scene References")] 
+        [SerializeField] private Camera _mainCamera;
+
         [SerializeField] private BoardRoot _boardRoot;
         [SerializeField] private CellView _cellPrefab;
 
-        [Header("Views")] [SerializeField] private MainMenuView _mainMenuView;
+        [Header("Views")] 
+        [SerializeField] private MainMenuView _mainMenuView;
         [SerializeField] private GameView _gameView;
         [SerializeField] private PauseView _pauseView;
         [SerializeField] private GameOverView _gameOverView;
@@ -26,6 +30,7 @@ namespace Minesweeper.Bootstrap
         {
             builder.RegisterInstance(_gameConfig);
             builder.RegisterInstance(_cameraConfig);
+
             builder.RegisterInstance(_mainCamera);
             builder.RegisterInstance(_boardRoot);
             builder.RegisterInstance(_cellPrefab);
@@ -37,6 +42,7 @@ namespace Minesweeper.Bootstrap
             builder.Register<ScreenManager>(Lifetime.Singleton).AsImplementedInterfaces();
 
             builder.Register<FieldController>(Lifetime.Singleton);
+            builder.Register<TimerController>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
             builder.Register<CameraController>(Lifetime.Singleton);
             builder.Register<GameInputController>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
             builder.Register<BoardViewController>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();

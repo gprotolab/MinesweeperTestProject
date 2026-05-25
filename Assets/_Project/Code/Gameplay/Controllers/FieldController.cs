@@ -23,8 +23,10 @@ namespace Minesweeper.Gameplay
 
         public int Cols { get; private set; }
         public int Rows { get; private set; }
+        public bool IsFirstClickHappened { get; private set; }
 
         public event Action<Cell> CellChanged;
+        public event Action FirstClickHappened;
         public event Action GameWon;
         public event Action GameLost;
         public event Action FieldReset;
@@ -45,6 +47,7 @@ namespace Minesweeper.Gameplay
             _openedNonMineCount = 0;
             _minesPlaced = false;
             _isGameOver = false;
+            IsFirstClickHappened = false;
 
             _cells = new Cell[Cols, Rows];
             for (int x = 0; x < Cols; x++)
@@ -67,6 +70,8 @@ namespace Minesweeper.Gameplay
                 PlaceMines(safeX: x, safeY: y);
                 CalculateNeighbours();
                 _minesPlaced = true;
+                IsFirstClickHappened = true;
+                FirstClickHappened?.Invoke();
             }
 
             if (cell.HasMine)

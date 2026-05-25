@@ -7,6 +7,7 @@ namespace Minesweeper.GameFlow
     public class GameplayState : IState
     {
         private readonly FieldController _field;
+        private readonly TimerController _timer;
         private readonly GameInputController _input;
         private readonly GameSession _session;
         private readonly GameStateMachine _stateMachine;
@@ -14,12 +15,14 @@ namespace Minesweeper.GameFlow
 
         public GameplayState(
             FieldController field,
+            TimerController timer,
             GameInputController input,
             GameSession session,
             GameStateMachine stateMachine,
             GameView view)
         {
             _field = field;
+            _timer = timer;
             _input = input;
             _session = session;
             _stateMachine = stateMachine;
@@ -32,6 +35,11 @@ namespace Minesweeper.GameFlow
             _view.PauseButtonClicked += OnPauseClicked;
             _field.GameWon += OnGameWon;
             _field.GameLost += OnGameLost;
+
+            if (_field.IsFirstClickHappened)
+                _timer.Start();
+            else
+                _field.FirstClickHappened += OnFirstClick;
         }
 
         public void Exit()
@@ -40,9 +48,17 @@ namespace Minesweeper.GameFlow
             _view.PauseButtonClicked -= OnPauseClicked;
             _field.GameWon -= OnGameWon;
             _field.GameLost -= OnGameLost;
+            _field.FirstClickHappened -= OnFirstClick;
+            _timer.Pause();
         }
 
         private void OnPauseClicked() => _stateMachine.ChangeState<PausedState>();
+
+        private void OnFirstClick()
+        {
+            _field.FirstClickHappened -= OnFirstClick;
+            _timer.Start();
+        }
 
         private void OnGameWon()
         {
