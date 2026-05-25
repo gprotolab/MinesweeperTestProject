@@ -1,4 +1,5 @@
-﻿using UnityEngine.InputSystem;
+﻿using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using VContainer.Unity;
 
 namespace Minesweeper.Gameplay
@@ -30,11 +31,18 @@ namespace Minesweeper.Gameplay
             bool right = mouse.rightButton.wasPressedThisFrame;
             if (!left && !right) return;
 
+            if (IsPointerOverUI()) return;
+
             var screenPos = mouse.position.ReadValue();
             if (!_camera.TryScreenToCell(screenPos, out var cell)) return;
 
             if (left) _field.OpenCell(cell.x, cell.y);
             else _field.ToggleFlag(cell.x, cell.y);
+        }
+
+        private static bool IsPointerOverUI()
+        {
+            return EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
         }
     }
 }
