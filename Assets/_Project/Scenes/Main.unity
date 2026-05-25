@@ -153,6 +153,8 @@ MonoBehaviour:
   autoRun: 1
   autoInjectGameObjects: []
   _gameConfig: {fileID: 11400000, guid: 8da02f54fee0cc44d9865ad63bc9b8fb, type: 2}
+  _cameraConfig: {fileID: 11400000, guid: d62857a73e24e714781d4faa2973eb93, type: 2}
+  _mainCamera: {fileID: 519420031}
   _boardRoot: {fileID: 512309234}
   _cellPrefab: {fileID: 5021407579628796061, guid: 2bc2d37b22ef9494296b8fd2260d7c7e, type: 3}
 --- !u!4 &486699896

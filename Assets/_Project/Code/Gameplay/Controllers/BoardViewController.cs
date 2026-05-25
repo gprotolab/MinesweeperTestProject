@@ -11,6 +11,7 @@ namespace Minesweeper.Gameplay
         private readonly CellView _cellPrefab;
         private readonly Transform _root;
 
+        private readonly Dictionary<Cell, CellView> _viewByCell = new();
         private readonly List<CellView> _spawnedViews = new();
 
         public BoardViewController(FieldController field, CellView cellPrefab, BoardRoot boardRoot)
@@ -23,11 +24,13 @@ namespace Minesweeper.Gameplay
         public void Initialize()
         {
             _field.FieldReset += OnFieldReset;
+            _field.CellChanged += OnCellChanged;
         }
 
         public void Dispose()
         {
             _field.FieldReset -= OnFieldReset;
+            _field.CellChanged -= OnCellChanged;
         }
 
         private void OnFieldReset()
@@ -36,6 +39,7 @@ namespace Minesweeper.Gameplay
                 if (view != null)
                     UnityEngine.Object.Destroy(view.gameObject);
             _spawnedViews.Clear();
+            _viewByCell.Clear();
 
             int cols = _field.Cols;
             int rows = _field.Rows;
@@ -46,13 +50,21 @@ namespace Minesweeper.Gameplay
             {
                 for (int x = 0; x < cols; x++)
                 {
+                    var cell = _field.GetCell(x, y);
                     var position = new Vector3(x - halfCols, y - halfRows, 0f);
                     var view = UnityEngine.Object.Instantiate(_cellPrefab, position, Quaternion.identity, _root);
                     view.name = $"Cell_{x}_{y}";
                     view.SetState(CellVisualState.Closed);
+                    _viewByCell[cell] = view;
                     _spawnedViews.Add(view);
                 }
             }
+        }
+
+        private void OnCellChanged(Cell cell)
+        {
+            if (!_viewByCell.TryGetValue(cell, out var view)) return;
+            view.SetState(cell.IsOpen ? CellVisualState.Opened : CellVisualState.Closed);
         }
     }
 }
