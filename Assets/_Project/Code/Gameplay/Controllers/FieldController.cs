@@ -74,8 +74,7 @@ namespace Minesweeper.Gameplay
                 return;
             }
 
-            cell.IsOpen = true;
-            CellChanged?.Invoke(cell);
+            FloodFillOpen(cell);
         }
 
         private void RevealAllMines()
@@ -137,6 +136,36 @@ namespace Minesweeper.Gameplay
             }
 
             return count;
+        }
+
+        private void FloodFillOpen(Cell start)
+        {
+            var queue = new Queue<Cell>();
+
+            start.IsOpen = true;
+            CellChanged?.Invoke(start);
+            queue.Enqueue(start);
+
+            while (queue.Count > 0)
+            {
+                var cell = queue.Dequeue();
+                if (cell.NeighbourMines != 0) continue;
+
+                foreach (var (dx, dy) in NeighbourOffsets)
+                {
+                    int nx = cell.X + dx;
+                    int ny = cell.Y + dy;
+                    if (!InBounds(nx, ny)) continue;
+
+                    var neighbour = _cells[nx, ny];
+                    if (neighbour.IsOpen || neighbour.HasMine)
+                        continue;
+
+                    neighbour.IsOpen = true;
+                    CellChanged?.Invoke(neighbour);
+                    queue.Enqueue(neighbour);
+                }
+            }
         }
 
         private bool InBounds(int x, int y) => x >= 0 && y >= 0 && x < Cols && y < Rows;
