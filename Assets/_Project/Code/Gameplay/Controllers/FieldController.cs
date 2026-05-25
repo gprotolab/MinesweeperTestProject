@@ -114,6 +114,7 @@ namespace Minesweeper.Gameplay
                     var cell = _cells[x, y];
                     if (!cell.HasMine || cell.IsOpen) continue;
 
+                    cell.IsFlagged = false;
                     cell.IsOpen = true;
                     CellChanged?.Invoke(cell);
                 }
