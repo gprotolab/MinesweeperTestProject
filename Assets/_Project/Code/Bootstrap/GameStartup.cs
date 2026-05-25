@@ -17,14 +17,13 @@ namespace Minesweeper.Bootstrap
 
         public void Start()
         {
+            _field.GameWon += OnGameWon;
             _field.GameLost += OnGameLost;
             _field.PrepareNewGame();
             _camera.FitToField(_field.Cols, _field.Rows);
         }
 
-        private void OnGameLost()
-        {
-            Debug.Log("[Minesweeper] Game lost");
-        }
+        private void OnGameWon() => Debug.Log("[Minesweeper] Game won");
+        private void OnGameLost() => Debug.Log("[Minesweeper] Game lost");
     }
 }

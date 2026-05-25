@@ -17,12 +17,15 @@ namespace Minesweeper.Gameplay
         private Cell[,] _cells;
         private bool _minesPlaced;
         private bool _isGameOver;
+        private int _openedNonMineCount;
+        private int _totalNonMineCount;
         private int _minesCount;
 
         public int Cols { get; private set; }
         public int Rows { get; private set; }
 
         public event Action<Cell> CellChanged;
+        public event Action GameWon;
         public event Action GameLost;
         public event Action FieldReset;
 
@@ -38,6 +41,8 @@ namespace Minesweeper.Gameplay
             Cols = _config.Cols;
             Rows = _config.Rows;
             _minesCount = _config.MinesCount;
+            _totalNonMineCount = Cols * Rows - _minesCount;
+            _openedNonMineCount = 0;
             _minesPlaced = false;
             _isGameOver = false;
 
@@ -75,6 +80,12 @@ namespace Minesweeper.Gameplay
             }
 
             FloodFillOpen(cell);
+
+            if (_openedNonMineCount >= _totalNonMineCount)
+            {
+                _isGameOver = true;
+                GameWon?.Invoke();
+            }
         }
 
         public void ToggleFlag(int x, int y)
@@ -155,6 +166,7 @@ namespace Minesweeper.Gameplay
             var queue = new Queue<Cell>();
 
             start.IsOpen = true;
+            _openedNonMineCount++;
             CellChanged?.Invoke(start);
             queue.Enqueue(start);
 
@@ -174,6 +186,7 @@ namespace Minesweeper.Gameplay
                         continue;
 
                     neighbour.IsOpen = true;
+                    _openedNonMineCount++;
                     CellChanged?.Invoke(neighbour);
                     queue.Enqueue(neighbour);
                 }
