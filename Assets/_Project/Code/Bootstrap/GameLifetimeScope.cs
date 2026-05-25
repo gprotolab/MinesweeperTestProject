@@ -1,4 +1,7 @@
-﻿using Minesweeper.Gameplay;
+﻿using Minesweeper.Core;
+using Minesweeper.GameFlow;
+using Minesweeper.Gameplay;
+using Minesweeper.Screens;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -14,6 +17,9 @@ namespace Minesweeper.Bootstrap
         [SerializeField] private BoardRoot _boardRoot;
         [SerializeField] private CellView _cellPrefab;
 
+        [Header("Views")] [SerializeField] private MainMenuView _mainMenuView;
+        [SerializeField] private GameView _gameView;
+
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterInstance(_gameConfig);
@@ -21,11 +27,21 @@ namespace Minesweeper.Bootstrap
             builder.RegisterInstance(_mainCamera);
             builder.RegisterInstance(_boardRoot);
             builder.RegisterInstance(_cellPrefab);
+            builder.RegisterComponent(_mainMenuView).AsImplementedInterfaces().AsSelf();
+            builder.RegisterComponent(_gameView).AsImplementedInterfaces().AsSelf();
+
+            builder.Register<ScreenManager>(Lifetime.Singleton).AsImplementedInterfaces();
 
             builder.Register<FieldController>(Lifetime.Singleton);
             builder.Register<CameraController>(Lifetime.Singleton);
             builder.Register<GameInputController>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
             builder.Register<BoardViewController>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+            builder.Register<GameSession>(Lifetime.Singleton);
+
+            builder.Register<GameStateMachine>(Lifetime.Singleton);
+            builder.Register<MainMenuState>(Lifetime.Singleton);
+            builder.Register<GameplaySetupState>(Lifetime.Singleton);
+            builder.Register<GameplayState>(Lifetime.Singleton);
 
             builder.RegisterEntryPoint<GameStartup>();
         }

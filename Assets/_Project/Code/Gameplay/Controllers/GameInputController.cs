@@ -8,14 +8,21 @@ namespace Minesweeper.Gameplay
         private readonly FieldController _field;
         private readonly CameraController _camera;
 
+        private bool _enabled;
+
         public GameInputController(FieldController field, CameraController camera)
         {
             _field = field;
             _camera = camera;
         }
 
+        public void Enable() => _enabled = true;
+        public void Disable() => _enabled = false;
+
         public void Tick()
         {
+            if (!_enabled) return;
+
             var mouse = Mouse.current;
             if (mouse == null) return;
 

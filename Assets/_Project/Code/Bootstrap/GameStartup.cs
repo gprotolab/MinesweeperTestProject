@@ -1,29 +1,34 @@
-﻿using Minesweeper.Gameplay;
-using UnityEngine;
+﻿using Minesweeper.GameFlow;
 using VContainer.Unity;
 
 namespace Minesweeper.Bootstrap
 {
     public class GameStartup : IStartable
     {
-        private readonly FieldController _field;
-        private readonly CameraController _camera;
+        private readonly GameStateMachine _stateMachine;
+        private readonly MainMenuState _mainMenuState;
+        private readonly GameplaySetupState _gameplaySetupState;
+        private readonly GameplayState _gameplayState;
 
-        public GameStartup(FieldController field, CameraController camera)
+        public GameStartup(
+            GameStateMachine stateMachine,
+            MainMenuState mainMenuState,
+            GameplaySetupState gameplaySetupState,
+            GameplayState gameplayState)
         {
-            _field = field;
-            _camera = camera;
+            _stateMachine = stateMachine;
+            _mainMenuState = mainMenuState;
+            _gameplaySetupState = gameplaySetupState;
+            _gameplayState = gameplayState;
         }
 
         public void Start()
         {
-            _field.GameWon += OnGameWon;
-            _field.GameLost += OnGameLost;
-            _field.PrepareNewGame();
-            _camera.FitToField(_field.Cols, _field.Rows);
-        }
+            _stateMachine.RegisterState(_mainMenuState);
+            _stateMachine.RegisterState(_gameplaySetupState);
+            _stateMachine.RegisterState(_gameplayState);
 
-        private void OnGameWon() => Debug.Log("[Minesweeper] Game won");
-        private void OnGameLost() => Debug.Log("[Minesweeper] Game lost");
+            _stateMachine.ChangeState<MainMenuState>();
+        }
     }
 }
