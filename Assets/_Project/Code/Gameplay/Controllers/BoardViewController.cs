@@ -33,13 +33,19 @@ namespace Minesweeper.Gameplay
             _field.CellChanged -= OnCellChanged;
         }
 
-        private void OnFieldReset()
+        public void ClearCells()
         {
             foreach (var view in _spawnedViews)
                 if (view != null)
                     UnityEngine.Object.Destroy(view.gameObject);
+
             _spawnedViews.Clear();
             _viewByCell.Clear();
+        }
+
+        private void OnFieldReset()
+        {
+            ClearCells();
 
             int cols = _field.Cols;
             int rows = _field.Rows;
@@ -71,7 +77,7 @@ namespace Minesweeper.Gameplay
         {
             if (cell.IsOpen)
                 return cell.HasMine ? CellVisualState.Mine : CellVisualState.Opened;
-            return CellVisualState.Closed;
+            return cell.IsFlagged ? CellVisualState.Flagged : CellVisualState.Closed;
         }
     }
 }

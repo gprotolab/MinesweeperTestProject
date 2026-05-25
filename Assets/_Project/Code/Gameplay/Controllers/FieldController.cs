@@ -55,7 +55,7 @@ namespace Minesweeper.Gameplay
             if (!InBounds(x, y)) return;
 
             var cell = _cells[x, y];
-            if (cell.IsOpen) return;
+            if (cell.IsOpen || cell.IsFlagged) return;
 
             if (!_minesPlaced)
             {
@@ -75,6 +75,18 @@ namespace Minesweeper.Gameplay
             }
 
             FloodFillOpen(cell);
+        }
+
+        public void ToggleFlag(int x, int y)
+        {
+            if (_isGameOver) return;
+            if (!InBounds(x, y)) return;
+
+            var cell = _cells[x, y];
+            if (cell.IsOpen) return;
+
+            cell.IsFlagged = !cell.IsFlagged;
+            CellChanged?.Invoke(cell);
         }
 
         private void RevealAllMines()
@@ -158,7 +170,7 @@ namespace Minesweeper.Gameplay
                     if (!InBounds(nx, ny)) continue;
 
                     var neighbour = _cells[nx, ny];
-                    if (neighbour.IsOpen || neighbour.HasMine)
+                    if (neighbour.IsOpen || neighbour.IsFlagged || neighbour.HasMine)
                         continue;
 
                     neighbour.IsOpen = true;

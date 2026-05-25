@@ -19,12 +19,15 @@ namespace Minesweeper.Gameplay
             var mouse = Mouse.current;
             if (mouse == null) return;
 
-            if (!mouse.leftButton.wasPressedThisFrame) return;
+            bool left = mouse.leftButton.wasPressedThisFrame;
+            bool right = mouse.rightButton.wasPressedThisFrame;
+            if (!left && !right) return;
 
             var screenPos = mouse.position.ReadValue();
             if (!_camera.TryScreenToCell(screenPos, out var cell)) return;
 
-            _field.OpenCell(cell.x, cell.y);
+            if (left) _field.OpenCell(cell.x, cell.y);
+            else _field.ToggleFlag(cell.x, cell.y);
         }
     }
 }
