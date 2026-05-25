@@ -19,6 +19,8 @@ namespace Minesweeper.Bootstrap
 
         [Header("Views")] [SerializeField] private MainMenuView _mainMenuView;
         [SerializeField] private GameView _gameView;
+        [SerializeField] private PauseView _pauseView;
+        [SerializeField] private GameOverView _gameOverView;
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -29,6 +31,8 @@ namespace Minesweeper.Bootstrap
             builder.RegisterInstance(_cellPrefab);
             builder.RegisterComponent(_mainMenuView).AsImplementedInterfaces().AsSelf();
             builder.RegisterComponent(_gameView).AsImplementedInterfaces().AsSelf();
+            builder.RegisterComponent(_pauseView).AsImplementedInterfaces().AsSelf();
+            builder.RegisterComponent(_gameOverView).AsImplementedInterfaces().AsSelf();
 
             builder.Register<ScreenManager>(Lifetime.Singleton).AsImplementedInterfaces();
 
@@ -42,6 +46,8 @@ namespace Minesweeper.Bootstrap
             builder.Register<MainMenuState>(Lifetime.Singleton);
             builder.Register<GameplaySetupState>(Lifetime.Singleton);
             builder.Register<GameplayState>(Lifetime.Singleton);
+            builder.Register<PausedState>(Lifetime.Singleton);
+            builder.Register<GameOverState>(Lifetime.Singleton);
 
             builder.RegisterEntryPoint<GameStartup>();
         }
