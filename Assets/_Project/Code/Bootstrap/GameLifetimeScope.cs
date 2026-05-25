@@ -40,6 +40,7 @@ namespace Minesweeper.Bootstrap
             builder.RegisterComponent(_gameOverView).AsImplementedInterfaces().AsSelf();
 
             builder.Register<ScreenManager>(Lifetime.Singleton).AsImplementedInterfaces();
+            builder.Register<ShortcutInputHandler>(Lifetime.Singleton).AsImplementedInterfaces();
 
             builder.Register<FieldController>(Lifetime.Singleton);
             builder.Register<TimerController>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
